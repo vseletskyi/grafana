@@ -1,6 +1,6 @@
 import { get as lodashGet, isEqual } from 'lodash';
 
-import { FrameGeometrySourceMode, getFrameMatchers, MapLayerOptions } from '@grafana/data';
+import { Field, FieldType, FrameGeometrySourceMode, getFrameMatchers, MapLayerOptions } from '@grafana/data';
 import { NestedPanelOptions, NestedValueAccess } from '@grafana/data/src/utils/OptionsUIBuilders';
 import { setOptionImmutably } from 'app/features/dashboard/components/PanelEditor/utils';
 import { addLocationFields } from 'app/features/geo/editor/locationEditor';
@@ -105,6 +105,19 @@ export function getLayerEditor(opts: LayerEditorOptions): NestedPanelOptions<Map
 
         addLocationFields('Location', 'location.', builder, options.location, data);
       }
+
+      if (layer.showLocation) {
+        builder
+          .addFieldNamePicker({
+            path: 'trackByDeviceId',
+            name: 'Track by device',
+            settings: {
+              filter: (f: Field) => f.type === FieldType.string,
+              noFieldsMessage: 'No string fields found',
+            },
+          });
+      }
+
       if (handler.registerOptionsUI) {
         handler.registerOptionsUI(builder, context);
       }
